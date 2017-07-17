@@ -1,152 +1,218 @@
-var path = require('path'),
-  globby = require('globby'),
-  webpack = require('webpack'),
-  RaxPlugin = require('rax-webpack-plugin'),
-  LiveReloadPlugin = require('webpack-livereload-plugin');
+/**
+ * 说明: webpack的配置请在该文件进行修改
+ * webpack配置文档请查看:https://webpack.github.io/docs/configuration.html
+ */
 
-var DEV = process.env.DEV;
+var path = require('path');
+var os = require('os');
+var _ = require('lodash');
+var webpack = require('webpack');
+var HappyPack = require('happypack');
+var happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length + 2});
+var glob = require('glob');
+var RaxPlugin = require('rax-webpack-plugin');
+var LiveReloadPlugin = require('webpack-livereload-plugin');
 
-var pluginList = ['add-module-exports',
-  //   nuke需引用配置，与内置冲突，不可同时使用。
-  // , ["transform-imports", {
-  //   "nuke": {
-  //     "transform": "nuke/lib/${member}/index.js",
-  //     "preventFullImport": true
-  //   }
-  // }],
-  ['transform-react-jsx', {
-    pragma: 'createElement'  // default pragma is React.createElement
-  }]
-];
+var srcPath = path.resolve(__dirname, './src'),
+    outputPath = path.resolve(__dirname, './build');
 
-// if (DEV) {
-//   pluginList.push('transform-react-jsx-source')
-// } else {
-//   pluginList.push('transform-react-constant-elements')
-// }
+var isWin = /^win/.test(process.platform);
 
-var LIVELOAD = process.env.LIVELOAD;
+/**
+ * 获取demo文件夹中的入口文件
+ * @param cwd
+ * @returns {{}}
+ */
+function getDevEntry(cwd) {
 
-function getEntry() {
-  var entry = {};
-  // 遍历所有页面入口文件
-  // ./src/pages/xxx/index.js
-  globby.sync(['*'], {
-    cwd: path.join(srcPath, 'pages')
-  }).forEach(function (page) {
-    entry[page] = ['./pages/' + page + '/index'];
-  });
-
-  return entry;
+    var entry = {};
+    glob.sync('*.jsx', { cwd: cwd }).forEach(function(item, i) {
+        var file = item.replace('.jsx', '');
+        entry[file] = [
+            item
+        ];
+    });
+    return entry;
 }
-
-var srcPath = path.resolve(__dirname, './src/'),
-  buildPath = path.resolve(__dirname, process.env.BUILD_DEST || 'build');
 
 var config = {
-  context: srcPath,
-  entry: getEntry(),
-  output: {
-    path: buildPath,
-    filename: '[name].js',
-    publicPath: '/build/'
-  },
-  resolve: {
-    root: srcPath,
-    extensions: ['', '.js', '.jsx'],
-    alias: {
-      "weex-rx": "rax",
-      $components: path.join(__dirname, "src/components"),
-      $page: path.join(__dirname, "src/pages"),
-      $util: path.join(__dirname, "src/util")
-    }
-  },
-  // 内置配置，参考文档 http://nuke.taobao.org/nukedocs/changelog/changes-of-buildin-vendor.html
-  // "externals": [{
-  //   "weex-rx": "commonjs rax",
-  //   "rax": "commonjs rax",
-  //   "nuke": "commonjs nuke",
-  //   "QAP-SDK": "commonjs QAP-SDK",
-  //   "genv": "commonjs genv",
-  // }],
-  module: {
-    loaders: [{
-      test: /\.js|jsx?$/,
-      loader: 'babel',
-      include: [
-        srcPath,
-        path.resolve(__dirname, 'node_modules/'),
-      ],
-      query: {
-        presets: ['es2015','rax'],
-        plugins: pluginList
-      }
-    }, {
-      test: /(\.rxscss|\.scss)$/,  // deprecated
-      loader: 'rx-css-loader!fast-sass'
-    }, {
-      test: /\.css$/,
-      loader: 'stylesheet'
-    }, {
-      test: /\.less$/,
-      loader: 'stylesheet!less'
-    }
+
+    //服务器开启的端口号
+    port: '3000',
+
+    context: srcPath,
+
+    //webpack 编译的入口文件
+    entry: getDevEntry(srcPath),
+
+    //输出的文件配置
+    output: {
+        path: outputPath,
+        filename: '[name].js',
+        publicPath: '/build/'
+    },
+
+    resolve: {
+        root: srcPath,
+        extensions: ['', '.js', '.jsx']
+    },
+
+    "externals": [{
+        "rax": "commonjs rax",
+        "nuke": "commonjs nuke",
+        "QAP-SDK": "commonjs QAP-SDK"
+    }],
+
+    module: {
+        loaders: [{
+            test: /\.(js|jsx)$/,
+            include: [
+                path.resolve(__dirname, "src")
+            ],
+            loader: 'happypack/loader?id=js'
+        }, {
+            test: /\.css$/,
+            loader: 'happypack/loader?id=css',
+            include: [
+                path.resolve(__dirname, "src")
+            ]
+        }, {
+            test: /\.less$/,
+            loader: 'happypack/loader?id=less',
+            include: [
+                path.resolve(__dirname, "src")
+            ]
+        },{
+            test: /\.rxscss$/,
+            loader: 'happypack/loader?id=scss',
+            include: [
+                path.resolve(__dirname, "src")
+            ]
+        },{
+            test: /\.json$/,
+            loader: 'json-loader'
+        }]
+    },
+
+    plugins: [
+
+        new HappyPack({
+            cache: true,
+            debug: true,
+            id: 'js',
+            loaders: ['babel?cacheDirectory=true'],
+            threadPool: happyThreadPool
+        }),
+
+        new HappyPack({
+            cache: true,
+            debug: true,
+            id: 'css',
+            loaders: ['stylesheet'],
+            threadPool: happyThreadPool
+        }),
+
+        new HappyPack({
+            cache: true,
+            debug: true,
+            id: 'less',
+            loaders: ['stylesheet!less'],
+            threadPool: happyThreadPool
+        }),
+
+        new HappyPack({
+            cache: true,
+            debug: true,
+            id: 'scss',
+            loaders: ['rx-css-loader!fast-sass'],
+            threadPool: happyThreadPool
+        }),
+
+        new RaxPlugin({
+            target: 'bundle'
+        }),
+        //// Webpack will analyze and prioritize often used modules assigning them the smallest ids.
+        new webpack.optimize.OccurenceOrderPlugin(),
+
+        //进度插件
+        new webpack.ProgressPlugin((percentage, msg) => {
+            const stream = process.stderr;
+            if (stream.isTTY && percentage < 0.71) {
+                stream.cursorTo(0);
+                stream.write(`📦   ${msg}`);
+                stream.clearLine(1);
+            }
+        })
     ]
-  },
-
-  plugins: [
-    new RaxPlugin({
-      target: 'bundle',
-      moduleName: 'rax',
-      globalName: 'Rax',
-      externalBuiltinModules: false,
-    }),
-    new webpack.NoErrorsPlugin(),
-    //new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-
-    //进度插件
-    new webpack.ProgressPlugin((percentage, msg) => {
-      const stream = process.stderr;
-      if (stream.isTTY && percentage < 0.71) {
-        stream.cursorTo(0);
-        stream.write(`📦   ${msg}`);
-        stream.clearLine(1);
-      } else if (percentage === 1) {
-        console.log('\nwebpack: bundle build is now finished.');
-      }
-    }),
-
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify(DEV ? 'development' : 'production'),
-        '__DEV__': JSON.stringify(DEV ? JSON.parse('true') : JSON.parse('false'))
-      }
-    })
-  ]
 };
 
-if (DEV && DEV != 0) {
-  config.devtool = 'cheap-module-source-map';
-  // config.plugins.push(new webpack.SourceMapDevToolPlugin({}));
-  if (LIVELOAD && LIVELOAD != 0) {
-    config.plugins.push(new LiveReloadPlugin())
-  }
-} else {
-  config.plugins.push(
-    //查找相等或近似的模块，避免在最终生成的文件中出现重复的模块。
-    new webpack.optimize.DedupePlugin(),
-    //Webpack gives IDs to identify your modules. With this plugin,
-    // Webpack will analyze and prioritize often used modules assigning them the smallest ids.
-    new webpack.optimize.OccurenceOrderPlugin(),
 
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      compress: { unused: true, dead_code: true, warnings: false },
-      output: { comments: false, ascii_only: true }
-    }),
-    new webpack.BannerPlugin('// {"framework": "Rax"}', { raw: true })
-  );
+
+
+/**
+ * 开发环境及demo编译时的配置
+ * @returns {*}
+ */
+function dev() {
+
+    var _config = _.cloneDeep(config);
+
+    _config.plugins.push(
+
+        new webpack.DefinePlugin({
+            "process.env": { NODE_ENV: JSON.stringify('development') },
+            "__DEV__": JSON.stringify(JSON.parse('true'))
+        }),
+
+        new LiveReloadPlugin()
+    );
+
+    //添加soure-map
+    _config.devtool = 'inline-source-map';
+
+    return _config;
 }
 
-module.exports = config;
+
+/**
+ * 编译到demo文件夹的配置
+ * 与dev的区别是不需要调试相关的配置
+ */
+function prod() {
+    var _config = _.cloneDeep(config);
+
+    _config.plugins.push(
+
+        //查找相等或近似的模块，避免在最终生成的文件中出现重复的模块。
+        new webpack.optimize.DedupePlugin(),
+        //Webpack gives IDs to identify your modules. With this plugin,
+        // Webpack will analyze and prioritize often used modules assigning them the smallest ids.
+        new webpack.optimize.OccurenceOrderPlugin(),
+
+
+        new webpack.DefinePlugin({
+            "process.env": { NODE_ENV: JSON.stringify('production') },
+            "__DEV__": JSON.stringify(JSON.parse('false'))
+        }),
+
+        //UglifyJs
+        new webpack.optimize.UglifyJsPlugin({
+            minimize: true,
+            compress: { warnings: false, drop_console: true },
+            output: { comments: false }
+        }),
+        new webpack.BannerPlugin('// {"framework": "Rax"}', {raw: true})
+
+    );
+
+    return _config;
+}
+
+
+module.exports = {
+
+    dev: dev,
+
+    prod: prod
+
+};

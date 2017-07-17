@@ -1,0 +1,49 @@
+.error {
+  margin-top: 235rem;
+  margin-bottom: 24rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.img {
+  width: 220rem;
+  height: 220rem;
+}
+
+.title {
+  color: #666;
+  font-size: 32rem;
+  margin-top:32rem;
+}
+
+.subtitle {
+  color: #999;
+  font-size: 26rem;
+  margin-top: 10rem;
+}
+
+.group {
+  margin-top: 34rem;
+  flex-direction: row;
+}
+
+.button {
+  width: 164rem;
+  height: 54rem;
+  color: #666;
+  font-size: 26rem;
+  text-align: center;
+  border-radius: 54rem;
+  justify-content: center;
+  border: 1px solid #999; 
+}
+
+.buttonright {
+  margin-left:20rem;
+}
+
+.text {
+  color: #666;
+  font-size: 26rem;
+  text-align: center;
+}

@@ -1,0 +1,77 @@
+@primary:#C70A0A;
+.page {
+   overflow: hidden;
+   flex:1;
+   background-color: #eeeeee;
+   /*margin-top: 90rem;*/
+   border-bottom: 1px solid #F4F4F4; /* hack h5 transition导致的1px*/
+}
+
+.placeholder {
+  height: 90rem;
+}
+
+.content {
+  width: 838rem;
+  flex:1;
+  padding: 0 20rem 90rem 0;
+  transform: 'translate(-68rem, 0px)';
+  -webkit-transform: 'translate(-68rem, 0px)';
+}
+
+.loading {
+  width: 838rem;
+  padding-top: 48rem;
+  margin-left: 20rem;
+  transform: 'translate(-68rem, 0px)';
+  -webkit-transform: 'translate(-68rem, 0px)';
+}
+
+.error {
+  width: 838rem;
+  margin-left: 20rem;
+  transform: 'translate(-68rem, 0px)';
+  -webkit-transform: 'translate(-68rem, 0px)';
+}
+
+.button {
+  height: 96rem;
+  border-radius: 12rem;
+  justify-content: center;
+  border: 1px solid #999;
+  margin-left: 84rem;
+  margin-right: 20rem;
+  margin-top: 10rem;
+  margin-bottom: 30rem;
+
+  color: #666666;
+  font-size: 30rem;
+  text-align: center;
+}
+
+.footer {
+  height: 96rem;
+  width: 750rem;
+  flex-direction:row;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  /*transform: translateY(-90rem);
+  -webkit-transform: translateY(-90rem);*/
+  z-index: 99;
+  justify-content: center;
+  
+  font-size: 30rem;
+  text-align: center;
+}
+.footer-button{
+  height: 96rem;
+  flex:1;
+}
+.primary{
+  background-color:@primary;
+  border-color: @primary;
+}
+.footer-hide{
+  bottom: -96rem;
+}

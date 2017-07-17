@@ -1,0 +1,25 @@
+.empty {
+  margin-top: 235rem;
+  margin-bottom: 330rem;
+  align-items: center;
+  justify-content: center;
+  width: 838rem;
+  margin-left: 20rem;
+}
+
+.img {
+  width: 220rem;
+  height: 220rem;
+}
+
+.title {
+  color: #666;
+  font-size: 32rem;
+  margin-top:32px;
+}
+
+.subtitle {
+  color: #999;
+  font-size: 26rem;
+  margin-top: 10px;
+}

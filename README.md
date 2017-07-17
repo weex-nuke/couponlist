@@ -1,83 +1,41 @@
+# coupon list
 
-> 项目A线上链接 [example.com](https://example.com/)
+## 介绍
+- 本示例需要运行在含 weex 容器的版本中（如千牛、淘宝， APP版本最新版）
+- 本示例演示 在 rax 项目中，如何使用 ListView 实现长数据列表、如何实现下拉列表效果、Transition 组件使用等。
 
-## 项目介绍
+- 包含以下组件：
+    - `ListView` 
+    - `Transition`
+    - `Checkbox`
 
-项目简介及业务范围介绍
+## demo
 
+<img src="https://img.alicdn.com/tfs/TB1hPR4SXXXXXc3apXXXXXXXXXX-1242-2208.png" width="240" />
 
-## 人员
+## 如何开始
 
-人员列表
+- 安装node环境等常见前端开发环境（略）
+- 安装脚手架
 
-## 相关资料
+````bash
+npm install -g qap-cli
+````
 
-- [PRD地址]()
-- [视觉稿地址]()
-- [数据接口约定]()
-- [其他资料]()
+- 安装客户端测试包(如只需浏览效果，实用应用市场的正式包即可)
 
-## 开发环境依赖
+````bash
+qap qianniu
+````
+- 克隆本仓库，在目录下运行
 
-- `nodejs`: ~4.4.0
-- `fie`: ~2.0.0
+````bash
+npm install 
+qap debug
+````
 
-## 本地开发
-
-### hosts 绑定
-
-```
-127.0.0.1 example.taobao.com
-127.0.0.1 api.example.taobao.com
-```
-
-### 开发调试
-
-
-```
-
-fie start
-
-```
-
-### 打包
-
-```
-
-fie build
-
-```
-
-## weex调试
-
-```
-
-千牛调试方式: 详见 http://nuke.taobao.org/nukedocs/guide/fie-tookit-nuke.html
-
-```
-
-## 项目架构及目录结构介绍
-
-介绍一下项目使用了哪些技术,及目录结构和技术架构说明
-
-## 升级日志
-
-
-### 0.0.1
-
-@张全蛋
-
-- 实现了XX功能
-- 支持`websocket`通信
-- ...
-
+- 在弹出的页面扫码即可查看真机调试效果
 
 ## 其他
-
-### 注意点
-
-- 什么地方需要注意
-
-### TODO
-
-- 后面可以做的优化的地方
+- 组件文档请参考 [nuke官网](http://nuke.taobao.org)
+- isv 旺旺讨论群：1551341770

@@ -1,0 +1,41 @@
+.inline_loading {
+  justify-content: center;
+  flex-direction: row;
+}
+
+.inline_text {
+  color: #666;
+  font-size: 28rem;
+}
+
+.fixed_loading {
+  position: 'fixed';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.inner_loading {
+  width: 180rem;
+  height: 180rem;
+  border-radius: 18rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  align-items: center;
+}
+
+.fixed_img {
+  width: 36rem;
+  height: 36rem;
+  margin-top: 48rem;
+}
+
+.fixed_text {
+  color: #FFF;
+  font-size: 28rem;
+  margin-top: 24rem;
+}

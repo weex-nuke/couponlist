@@ -1,38 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-  <meta name="format-detection" content="telephone=no"/>
-  <title>Nuke降级H5</title>
-  <link rel="stylesheet" href="//g.alicdn.com/nuke/style-normalize/0.1.4/index.css">
+    <meta charset="UTF-8">
+    <title>H5版本</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="//g.alicdn.com/nuke/style-normalize/0.1.6/index.css">
+
 </head>
+<body>
 
-<body style="margin: 0; padding: 0;">
-  
+<script src="//os.alipayobjects.com/qapprod/8d2b2001-586b-4c08-8154-1a93c24dfa63/index.js"></script>
+<script id="script" type="text/javascript" src="<%= bundleJs %>"></script>
+
 </body>
-<% if(isIntranet){%>
-  <script src="//g.alicdn.com/mtb/lib-mtop/2.3.14/mtop.js"></script>
-  <script src="//g.alicdn.com/mtb/lib-promise/3.1.1/polyfillB.js"></script>
-<% } %>  
-<script type="text/javascript">
-    window.__QAP__ = window.__QAP__ || {};
-    __QAP__.package = {
-        config: <%- qap_json %>
-    };
-</script>
-<script src="<%= degrade.webURL %>"></script>
-<script src="<%= bundleJs%>"></script>
-<script>
-  (function () {
-    console.info('降级页面内置信息如下：');
-    console.info('rax版本','<%= degrade.fileVersion.rax%>');
-    console.info('nuke版本：','<%= degrade.fileVersion.nuke%>');
-    console.info('QAP-SDK版本：','<%= degrade.fileVersion.rax%>');
-    console.info('packjs地址：','<%=  degrade.webURL %>');
-  })();
-</script>
-
 </html>
